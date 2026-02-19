@@ -1,0 +1,123 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -336,
+        -208
+      ],
+      "id": "9c3e7cf0-f903-42e6-8989-efdda9b8699b",
+      "name": "Telegram Trigger",
+      "webhookId": "cf378484-c9fc-4789-94c0-8779fa0092f6"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "Sure thing, tiger 🕷️\n\nI’m ready to channel my inner friendly neighborhood Spider-Man… but I’ll need two things from you:\n\n1. **What’s the message you want Spider-Man to reply to?**\n2. **What’s the prompt you want me to refine?**\n\nSend them over, and I’ll:\n\n* 🕸️ Reply in full Spider-Man style (witty, heroic, a little sarcastic).\n* ✨ Refine your prompt to make it clearer, stronger, and more effective.\n\nYour move.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -48,
+        -208
+      ],
+      "id": "27b4cdbd-710c-4fe0-966e-3d56b7db3f58",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -128,
+        96
+      ],
+      "id": "27370a14-b84a-42b3-8297-1a96737ba0c9",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        432,
+        -208
+      ],
+      "id": "218e0fcd-9fe4-4977-bc14-f2b82a5fce1f",
+      "name": "Send a text message",
+      "webhookId": "5bae4dea-ce7e-4b8e-b1c9-71516783bbee"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "0eac7e48-5145-4c50-8a54-b46885f8044d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b1ae019bd9ca5c342f90484759e741eec2d62e60f63a1a988937ef0fc4da1df0"
+  },
+  "id": "NlmzkHqONxvKSsyv",
+  "tags": []
+}
